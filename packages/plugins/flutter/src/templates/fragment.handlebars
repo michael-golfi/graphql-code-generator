@@ -1,0 +1,44 @@
+{{# if (hackFragmentFields "ensure_unique" name) ~}}
+
+{{#eachBackwards innerModels }}
+
+{{> defineClass
+      className=(concat (toPascalCase ../name) modelType)
+      typeName=schemaBaseType
+      assignableTo=(
+        withInputType
+          schemaBaseType
+          @root.config.replaceTypes
+          (concat (toPascalCase ../name) modelType)
+          @root.config.generateFragmentHelpers
+      )
+      fields=(hackFragmentFields "get" fragmentsSpread fields )
+      contextModels=../innerModels
+      contextName=(toPascalCase ../name)
+}}
+
+
+{{/eachBackwards}}
+
+{{> defineClass
+      className=(concat (toPascalCase name) '')
+      typeName=onType
+      assignableTo=(
+        withInputType
+          onType
+          @root.config.replaceTypes
+          (concat (toPascalCase name) '')
+          @root.config.generateFragmentHelpers
+      )
+      fields=(hackFragmentFields "get" fragmentsSpread fields)
+      contextModels=innerModels
+      contextName=(toPascalCase name)
+}}
+
+{{~ hackFragmentFields "add" name
+    fields
+    innerModels
+    fragmentsSpread 
+~}}
+
+{{/if}}

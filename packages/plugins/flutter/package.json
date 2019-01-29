@@ -1,0 +1,49 @@
+{
+  "name": "graphql-codegen-flutter",
+  "version": "0.16.0",
+  "description": "graphql-codegen-cli template for Flutter",
+  "repository": "git@github.com:dotansimha/graphql-code-generator.git",
+  "license": "MIT",
+  "scripts": {
+    "prepublishOnly": "yarn build",
+    "build": "codegen-templates-scripts build",
+    "pretest": "yarn build"
+  },
+  "devDependencies": {
+    "@types/handlebars": "^4.0.40",
+    "codegen-templates-scripts": "0.16.0",
+    "graphql": "14.1.1",
+    "graphql-codegen-core": "0.16.0",
+    "graphql-codegen-plugin-handlebars-helpers": "0.16.0",
+    "graphql-codegen-plugin-helpers": "0.16.0",
+    "graphql-tag": "^2.10.1"
+  },
+  "main": "./dist/index.js",
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
+  },
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "enableTsDiagnostics": false
+      }
+    },
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  },
+  "dependencies": {
+    "graphql-codegen-typescript-common": "^0.16.0",
+    "linewrap": "^0.2.1"
+  }
+}

@@ -1,0 +1,115 @@
+@JsonSerializable()
+class {{ className }} {{
+
+  classExtends
+    (resolveMixins @root.config.mixins fields)
+    fragmentsSpread
+    interfaces
+    @root.config.replaceTypes
+
+}} {
+  {{#if typeName }}
+  static final String typeName = "{{ typeName }}";
+  {{/if}}
+
+  {{#each fields}}{{#if type}}{{#if name}}
+  {{#if description }}{{ multilineComment description }}
+  {{/if}}
+  {{ resolveType type
+      (takeFirst contextName ../contextName)
+      (takeFirst contextModels ../contextModels)
+      @root.config.scalars
+      @root.config.replaceTypes
+      isArray
+      @root.config.irreducibleTypes
+      raw
+  }} {{name}};
+  {{~/if}}{{/if}}{{/each}}
+
+  {{className}}(
+  {{~#if fields.length~}}
+  {
+    {{#each fields}}{{#if name}}
+    {{~#if isRequired}}@required {{/if}}this.{{name}},
+    {{/if}}{{/each}}
+  }
+  {{~/if}});
+
+  {{ className }}.empty();
+
+
+  static I _assign<I extends {{className}}>(
+    I into,
+    {{className}} source,
+  ) {
+    {{~#each fields}}{{#if name}}
+    into.{{name}} = source.{{name}};
+    {{~/if}}{{/each}}
+    return into;
+  }
+
+  /// Modeled after javascript's Object.assign.
+  /// Copies the attributes from [source] into [target],
+  /// then optionally does the same for each item in [vargs]
+  static I assign<I extends {{className}}>(
+    I into,
+    {{className}} source,
+    [List<{{className}}> vargs]
+  ) {
+    into = _assign(into, source);
+    if (vargs != null){
+      vargs.forEach((varg){
+        into = _assign(into, varg);
+      });
+    }
+    return into;
+  }
+
+  {{#if assignableTo~}}
+  {{~#if @root.config.generateFragmentHelpers~}}
+  {{~#each assignableTo}}
+  /// Modeled after javascript's Object.assign.
+  /// Copies the attributes from [source] into [target]
+  static {{this}} assignTo{{ this }}(
+    {{this}} into,
+    {{../className}} source,
+  ){
+    {{~#each ../fields}}{{~#if (
+      fragmentFieldOnBaseType
+        name
+        @root.config.generateFragmentHelpers
+      )
+    }}
+    into.{{name}} = source.{{name}};
+    {{~/if}}{{/each}}
+    return into;
+  }
+  {{/each~}}
+  {{~/if}}{{~/if}}
+
+  /// Copies and downcasts any inheriting [source] into a new [{{className}}]
+  static {{className}} copy({{className}} source) {
+     return {{className}}(
+      {{~#each fields~}}{{#if name}}
+        {{name}}: source.{{name}},
+      {{~/if}}{{/each}}
+    );
+  }
+
+  factory {{className}}.fromJson(Map<String, dynamic> json) => _${{className}}FromJson(json);
+
+  Map<String, dynamic> toJson() => serializeToJson(this);
+
+  static const deserializeFromJson = _${{className}}FromJson;
+  {{#if typeName }}
+  static Map<String, dynamic> serializeToJson({{className}} instance){
+    Map<String, dynamic> json = _${{className}}ToJson(instance);
+    json['__typename'] = typeName;
+    return json;
+  }
+  {{else}}
+  static const serializeToJson = _${{className}}ToJson;
+  {{/if}}
+
+}
+

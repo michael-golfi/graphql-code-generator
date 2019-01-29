@@ -1,0 +1,66 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+import 'package:meta/meta.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+{{#if config.imports}}
+{{#each config.imports}}
+import '{{this}}';
+{{/each}}
+{{/if}}
+
+{{#if config.parts}}
+{{#each config.parts}}
+part '{{this}}';
+{{/each}}
+{{/if}}
+
+/* Enums */
+{{#each enums}}
+{{> enum }}
+
+{{/each}}
+
+abstract class ToJson {
+  Map<String, dynamic> toJson();
+}
+
+{{#each unions}}
+// TODO I don't think unions are possible with dart
+// perhaps https://github.com/fluttercommunity/dart_sealed_unions
+// Please PR if you need unions
+{{ toComment description }}
+{{/each}}
+
+/* Input Types */
+{{#each inputTypes}}
+{{> type }}
+{{~ registerInputType name }}
+
+{{/each}}
+
+/* Interfaces */
+{{#each interfaces}}
+{{> type }}
+
+{{/each}}
+
+/* Types */
+{{#each types}}
+{{> type }}
+
+{{/each}}
+{{!--
+{{~#each types}}
+  {{~#each fields}}
+    {{~# if hasArguments }}
+export interface {{ toPascalCase name }}{{ toPascalCase ../name }}Args {
+{{#each arguments}}
+  {{ name }}{{ getOptionals this }}: {{ convertedType this }}; {{ toComment description }}
+{{/each}}
+}
+    {{/if}}
+  {{/each}}
+{{/each}}
+--}}
+
